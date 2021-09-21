@@ -1,8 +1,7 @@
 
 using GraphQL.Types;
 using GraphqlSpike.Function.GraphTypes;
-using GraphqlSpike.Function.Models;
-using System.Linq;
+using GraphqlSpike.Function.Resolvers;
 
 namespace GraphqlSpike.Function
 {
@@ -11,35 +10,13 @@ namespace GraphqlSpike.Function
         public Query()
         {
             Name = "Query";
-            Field<ListGraphType<ContactType>>(
-              "contacts",
-              resolve: context =>
-              {
-                  var contacts = new Contact[] {
-                      new Contact {ID = 1, Name = "Han Solo" },
-                      new Contact { ID = 2, Name = "Luke Skywalker" }
-                      };
-                  return contacts;
-              });
+            Field<ListGraphType<ContactType>>("contacts", resolve: GetContact.Resolve);
 
-            Field<ContactType>(
-                "contact",
+            Field<ContactType>("contact",
                 arguments: new QueryArguments(
                         new QueryArgument<IntGraphType> { Name = "id" }
                     ),
-                resolve: context =>
-                {
-                    var id = (int)context.Arguments["id"].Value;
-
-                    var contacts = new Contact[] {
-                        new Contact { ID = 1, Name = "Han Solo" },
-                        new Contact { ID = 2, Name = "Luke Skywalker" }
-                    };
-
-                    var contact = contacts.SingleOrDefault<Contact>(c => c.ID == id);
-
-                    return contact;
-                });
+                resolve: GetContact.Resolve);
         }
     }
 }
