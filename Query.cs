@@ -1,25 +1,11 @@
 
 using GraphQL.Types;
+using GraphqlSpike.Function.GraphTypes;
+using GraphqlSpike.Function.Models;
 using System.Linq;
 
 namespace GraphqlSpike.Function
 {
-    public class Contact
-    {
-        public int ID { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class ContactType : ObjectGraphType<Contact>
-    {
-        public ContactType()
-        {
-            Name = "Contact";
-            Description = "A contact.";
-            Field("name", c => c.Name, nullable: true).Description("The name of the contact.");
-        }
-    }
-
     public class Query : ObjectGraphType
     {
         public Query()
@@ -29,7 +15,10 @@ namespace GraphqlSpike.Function
               "contacts",
               resolve: context =>
               {
-                  var contacts = new Contact[] { new Contact { Name = "Han Solo" }, new Contact { Name = "Luke Skywalker" } };
+                  var contacts = new Contact[] {
+                      new Contact {ID = 1, Name = "Han Solo" },
+                      new Contact { ID = 2, Name = "Luke Skywalker" }
+                      };
                   return contacts;
               });
 
@@ -42,7 +31,10 @@ namespace GraphqlSpike.Function
                 {
                     var id = (int)context.Arguments["id"].Value;
 
-                    var contacts = new Contact[] { new Contact { ID = 1, Name = "Han Solo" }, new Contact { ID = 2, Name = "Luke Skywalker" } };
+                    var contacts = new Contact[] {
+                        new Contact { ID = 1, Name = "Han Solo" },
+                        new Contact { ID = 2, Name = "Luke Skywalker" }
+                    };
 
                     var contact = contacts.SingleOrDefault<Contact>(c => c.ID == id);
 
