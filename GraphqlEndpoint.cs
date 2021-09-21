@@ -27,20 +27,14 @@ namespace GraphqlSpike.Function
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var schema = Schema.For(@"
-            type Query {
-                hello: String
-                message: String
-            }
-            ");
-
-            var root = new
-            {
-                Hello = "Hello World!",
-                Message = "May the force be with you"
-            };
-
-            Console.WriteLine(req.Body.ToString());
+            var schema = new Schema { Query = new Query() };
+            // var schema = Schema.For(@"
+            // type Query {
+            //     contacts {
+            //         name
+            //     }
+            // }
+            // ");
 
             var query = await new StreamReader(req.Body).ReadToEndAsync();
 
@@ -51,7 +45,7 @@ namespace GraphqlSpike.Function
                 // _.Query = "{ hello }";
                 _.Query = query;
                 // _.Query = req.Body.ToString();
-                _.Root = root;
+                // _.Root = Query;
             });
 
             Console.WriteLine(json);
